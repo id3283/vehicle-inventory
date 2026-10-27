@@ -1,7 +1,7 @@
 package com.pluralsight;
 
 public class Vehicle {
-    private long vehicleId = -99;
+    private long vehicleId;
     private String makeModel;
     private String color;
     private int odometerReading;
@@ -16,7 +16,7 @@ public class Vehicle {
     }
 
     public long getVehicleId() {
-        return vehicleId;
+        return this.vehicleId;
     }
 
     public void setVehicleId(long vehicleId) {
@@ -53,5 +53,11 @@ public class Vehicle {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void display() {
+        System.out.printf("VIN: %d, Make/Model: %s, Color: %s, Mileage: %d, Price: %.2f\n",
+                getVehicleId(), this.makeModel, this.color, this.odometerReading, this.price);
+//        System.out.println("VIN: " + currentVehicle.getVehicleId() + " Make/Model: " + currentVehicle.getMakeModel() + " Color: " + currentVehicle.getColor() + " Mileage: " + currentVehicle.getOdometerReading() + " Price: " + currentVehicle.getPrice());
     }
 }
