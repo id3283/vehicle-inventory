@@ -9,7 +9,8 @@ public class VehicleInventoryApp {
         Scanner myScanner = new Scanner(System.in);
 
         // Create an empty array list of Vehicle objects (not null, just empty - size 0)
-        ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
+        ArrayList<Vehicle> vehicles;
+        vehicles = new ArrayList<Vehicle>();
 
         // Create a vehicle object, chuck in variable named car
         Vehicle car = new Vehicle(101121, "Ford Explorer", "Red", 45000, 13500);
@@ -36,6 +37,7 @@ public class VehicleInventoryApp {
                 6 - Quit
                 Enter your command:""";
         System.out.println(menuPrompt);
+
         String userInput = myScanner.nextLine();
 
         switch (userInput) {
@@ -46,9 +48,22 @@ public class VehicleInventoryApp {
                 }
             }
             case "2" -> {
-//                searchVehicles();
+                System.out.println("Enter make/model to search for: ");
+                String searchMakeModel = myScanner.nextLine();
+                searchVehicles(searchMakeModel, vehicles);
             }
+
         }
 
     }
+
+    private static void searchVehicles(String searchMakeModel, ArrayList<Vehicle> vehicles) {
+        for ( Vehicle x : vehicles) {
+            String currentMakeModel = x.getMakeModel();
+            if (currentMakeModel.equals(searchMakeModel)) {
+                x.display();
+            }
+        }
+    }
+
 }
