@@ -29,3 +29,7 @@ Here's my search using a hash map:
    3. Search by color 
 3. Add a vehicle 
 4. Quit
+
+
+Here's a random diagram of a `HashMap`:  
+![hashmap_diagram](images/hashmap_diagram.png)
