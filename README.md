@@ -12,3 +12,20 @@ Here's my search using a hash map:
         v.display();
     }
 ```
+
+## Original menu:
+1. List all vehicles
+2. Search by make/model  
+3. Search by price range 
+4. Search by color 
+5. Add a vehicle 
+6. Quit
+
+## New menu:
+1. List all vehicles
+2. Reports
+   1. Search by make/model  
+   2. Search by price range 
+   3. Search by color 
+3. Add a vehicle 
+4. Quit

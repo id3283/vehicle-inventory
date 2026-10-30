@@ -28,12 +28,11 @@ public class VehicleInventoryApp {
         vehicles.add(yourCar);
         vehicleHashMap.put(yourCar.getMakeModel(), yourCar);
 
-        // 🤯
-        // Loop through the array list of Vehicles called: vehicles
-        for (Vehicle currentVehicle : vehicles) {
-//            System.out.println( currentVehicle.getColor() );
-        }
 
+        mainMenu(myScanner, vehicles);
+    }
+
+    private static void mainMenu(Scanner myScanner, ArrayList<Vehicle> vehicles) {
         String menuPrompt = """
                 What do you want to do?
                 1 - List all vehicles
@@ -51,39 +50,19 @@ public class VehicleInventoryApp {
 
             switch (userInput) {
                 case "1" -> {
-                    // Print a list of all the vehicles
-                    for (Vehicle currentVehicle : vehicles) {
-                        currentVehicle.display();
-                    }
+                    listAllVehicles(vehicles);
                 }
                 case "2" -> {
-                    System.out.println("Enter make/model to search for: ");
-                    String searchMakeModel = myScanner.nextLine();
-
-                    searchForMakeModel(searchMakeModel, vehicleHashMap);
+                    searchForMakeModel(vehicles, myScanner);
                 }
                 case "3" -> {
-                    System.out.println("Enter minimum search price: ");
-                    double priceMinimum = Double.parseDouble(myScanner.nextLine());
-
-                    System.out.println("Enter maxiumum search price: ");
-                    String priceMaximumText = myScanner.nextLine();
-                    double priceMaximum = Double.parseDouble(priceMaximumText);
-
-                    searchByPrice(priceMinimum, priceMaximum, vehicles);
+                    searchByPrice(vehicles, myScanner);
                 }
                 case "4" -> {
-                    System.out.println("Enter the color you want: ");
-                    String searchColor = myScanner.nextLine();
-
-                    searchForColor(searchColor, vehicles);
+                    searchForColor(vehicles, myScanner);
                 }
                 case "5" -> {
-                    System.out.println("Enter a vehicle's info like this: 101123,Chevrolet Malibu,Black,50000,9700");
-                    String vehicleCsv = myScanner.nextLine();
-
-                    Vehicle newVehicle = parseVehicle(vehicleCsv);
-                    vehicles.add(newVehicle);
+                    addVehicle(vehicles, myScanner);
                 }
                 case "6" -> {
                     System.out.println("Bye!");
@@ -127,7 +106,29 @@ public class VehicleInventoryApp {
 //    public String[] simpleSplit(String stringToSplit, String delimiter) {
 //    }
 
-    private static void searchByPrice(double priceMinimum, double priceMaximum, ArrayList<Vehicle> vehicles) {
+    private static void listAllVehicles(ArrayList<Vehicle> vehicles) {
+        // Print a list of all the vehicles
+        for (Vehicle currentVehicle : vehicles) {
+            currentVehicle.display();
+        }
+    }
+
+    private static void addVehicle(ArrayList<Vehicle> vehicles, Scanner scanner) {
+        System.out.println("Enter a vehicle's info like this: 101123,Chevrolet Malibu,Black,50000,9700");
+        String vehicleCsv = scanner.nextLine();
+
+        Vehicle newVehicle = parseVehicle(vehicleCsv);
+        vehicles.add(newVehicle);
+    }
+
+    private static void searchByPrice(ArrayList<Vehicle> vehicles, Scanner scanner) {
+        System.out.println("Enter minimum search price: ");
+        double priceMinimum = Double.parseDouble(scanner.nextLine());
+
+        System.out.println("Enter maximum search price: ");
+        String priceMaximumText = scanner.nextLine();
+        double priceMaximum = Double.parseDouble(priceMaximumText);
+
         for (Vehicle currentVehicle : vehicles) {
             double vehiclePrice = currentVehicle.getPrice();
 
@@ -138,7 +139,10 @@ public class VehicleInventoryApp {
         }
     }
 
-    private static void searchForColor(String searchColor, ArrayList<Vehicle> vehiclesToSearch) {
+    private static void searchForColor(ArrayList<Vehicle> vehiclesToSearch, Scanner scanner) {
+        System.out.println("Enter the color you want: ");
+        String searchColor = scanner.nextLine();
+
         for (Vehicle currentVehicle : vehiclesToSearch) {
 
             String currentColor = currentVehicle.getColor();
@@ -148,12 +152,17 @@ public class VehicleInventoryApp {
         }
     }
 
-    public static void searchForMakeModel(String searchMakeModel, HashMap<String, Vehicle> vehicleMap) {
+    public static void searchForMakeModel(HashMap<String, Vehicle> vehicleMap, Scanner scanner) {
+        System.out.println("Enter make/model to search for: ");
+        String searchMakeModel = scanner.nextLine();
+
         Vehicle v = vehicleMap.get(searchMakeModel);
         v.display();
     }
 
-    public static void searchForMakeModel(String searchMakeModel, ArrayList<Vehicle> vehicles) {
+    public static void searchForMakeModel(ArrayList<Vehicle> vehicles, Scanner scanner) {
+        System.out.println("Enter make/model to search for: ");
+        String searchMakeModel = scanner.nextLine();
         for (Vehicle v : vehicles) {
             String currentMakeModel = v.getMakeModel();
             if (currentMakeModel.equals(searchMakeModel)) {
