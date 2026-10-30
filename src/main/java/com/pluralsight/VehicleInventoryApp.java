@@ -1,6 +1,7 @@
 package com.pluralsight;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -13,14 +14,19 @@ public class VehicleInventoryApp {
         ArrayList<Vehicle> vehicles;
         vehicles = new ArrayList<Vehicle>();
 
+        HashMap<String, Vehicle> vehicleHashMap = new HashMap<String, Vehicle>();
+
         // Create a vehicle object, chuck in variable named car
         Vehicle car = new Vehicle(101121, "Ford Explorer", "Red", 45000, 13500);
         // add that object to my (previously empty) array list
         vehicles.add(car);
+        String makeModel = car.getMakeModel();
+        vehicleHashMap.put(makeModel, car);
 
         // Add another one, same deal
         Vehicle yourCar = new Vehicle(101122, "Toyota Camry", "Blue", 60000, 11000);
         vehicles.add(yourCar);
+        vehicleHashMap.put(yourCar.getMakeModel(), yourCar);
 
         // 🤯
         // Loop through the array list of Vehicles called: vehicles
@@ -37,68 +43,73 @@ public class VehicleInventoryApp {
                 5 - Add a vehicle
                 6 - Quit
                 Enter your command:""";
-        System.out.println(menuPrompt);
 
-        String userInput = myScanner.nextLine();
+        boolean done = false;
+        do {
+            System.out.println(menuPrompt);
+            String userInput = myScanner.nextLine();
 
-        switch (userInput) {
-            case "1" -> {
-                // Print a list of all the vehicles
-                for (Vehicle currentVehicle : vehicles) {
-                    currentVehicle.display();
+            switch (userInput) {
+                case "1" -> {
+                    // Print a list of all the vehicles
+                    for (Vehicle currentVehicle : vehicles) {
+                        currentVehicle.display();
+                    }
+                }
+                case "2" -> {
+                    System.out.println("Enter make/model to search for: ");
+                    String searchMakeModel = myScanner.nextLine();
+
+                    searchForMakeModel(searchMakeModel, vehicleHashMap);
+                }
+                case "3" -> {
+                    System.out.println("Enter minimum search price: ");
+                    double priceMinimum = Double.parseDouble(myScanner.nextLine());
+
+                    System.out.println("Enter maxiumum search price: ");
+                    String priceMaximumText = myScanner.nextLine();
+                    double priceMaximum = Double.parseDouble(priceMaximumText);
+
+                    searchByPrice(priceMinimum, priceMaximum, vehicles);
+                }
+                case "4" -> {
+                    System.out.println("Enter the color you want: ");
+                    String searchColor = myScanner.nextLine();
+
+                    searchForColor(searchColor, vehicles);
+                }
+                case "5" -> {
+                    System.out.println("Enter a vehicle's info like this: 101123,Chevrolet Malibu,Black,50000,9700");
+                    String vehicleCsv = myScanner.nextLine();
+
+                    Vehicle newVehicle = parseVehicle(vehicleCsv);
+                    vehicles.add(newVehicle);
+                }
+                case "6" -> {
+                    System.out.println("Bye!");
+                    done = true;
+                }
+                default -> {
+                    System.out.println("That ain't an option, dummy.");
                 }
             }
-            case "2" -> {
-                System.out.println("Enter make/model to search for: ");
-                String searchMakeModel = myScanner.nextLine();
-
-                searchForMakeModel(searchMakeModel, vehicles);
-            }
-            case "3" -> {
-                System.out.println("Enter minimum search price: ");
-                double priceMinimum = Double.parseDouble(myScanner.nextLine());
-
-                System.out.println("Enter maxiumum search price: ");
-                String priceMaximumText = myScanner.nextLine();
-                double priceMaximum = Double.parseDouble(priceMaximumText);
-
-                searchByPrice(priceMinimum, priceMaximum, vehicles);
-            }
-            case "4" -> {
-                System.out.println("Enter the color you want: ");
-                String searchColor = myScanner.nextLine();
-
-                searchForColor(searchColor, vehicles);
-            }
-            case "5" -> {
-                System.out.println("Enter a vehicle's info like this: 101123,Chevrolet Malibu,Black,50000,9700");
-                String vehicleCsv = myScanner.nextLine();
-
-                Vehicle newVehicle = parseVehicle(vehicleCsv);
-                vehicles.add(newVehicle);
-            }
-            case "6" -> {
-                System.out.println("Bye!");
-            }
-            default -> {
-                System.out.println("That ain't an option, dummy.");
-            }
-        }
+        } while (!done);
     }
 
     /**
      * Parses a string into a proper Vehicle object
-     * @param vehicleCsv the String to convert
+     *
+     * @param csvString the String to convert
      * @return a new car!!!
      */
-    public static Vehicle parseVehicle(String vehicleCsv) {
+    public static Vehicle parseVehicle(String csvString) {
         // split up a string like:
         //   "101123,Chevrolet Malibu,Black,50000,9700"
-        String[] parts = vehicleCsv.split(Pattern.quote(","));
+        String[] parts = csvString.split(Pattern.quote(","));
 
         // Convert the first split part into the vehicle ID
-        String vehicleIdText = parts[0];
-        long vehicleId = Long.parseLong(vehicleIdText);
+        String vIdText = parts[0];
+        long vehicleId = Long.parseLong(vIdText);
 
         String makeModel = parts[1];
 
@@ -108,9 +119,9 @@ public class VehicleInventoryApp {
 
         double price = Double.parseDouble(parts[4]);
 
-        Vehicle newCar = new Vehicle(vehicleId, makeModel, color, odometerReading, price);
+        Vehicle x = new Vehicle(vehicleId, makeModel, color, odometerReading, price);
 
-        return newCar;
+        return x;
     }
 
 //    public String[] simpleSplit(String stringToSplit, String delimiter) {
@@ -120,7 +131,7 @@ public class VehicleInventoryApp {
         for (Vehicle currentVehicle : vehicles) {
             double vehiclePrice = currentVehicle.getPrice();
 
-            if( (vehiclePrice >= priceMinimum) && (vehiclePrice <= priceMaximum) ) {
+            if ((vehiclePrice >= priceMinimum) && (vehiclePrice <= priceMaximum)) {
                 currentVehicle.display();
             }
 
@@ -137,11 +148,16 @@ public class VehicleInventoryApp {
         }
     }
 
-    private static void searchForMakeModel(String searchMakeModel, ArrayList<Vehicle> vehicles) {
-        for ( Vehicle x : vehicles) {
-            String currentMakeModel = x.getMakeModel();
+    public static void searchForMakeModel(String searchMakeModel, HashMap<String, Vehicle> vehicleMap) {
+        Vehicle v = vehicleMap.get(searchMakeModel);
+        v.display();
+    }
+
+    public static void searchForMakeModel(String searchMakeModel, ArrayList<Vehicle> vehicles) {
+        for (Vehicle v : vehicles) {
+            String currentMakeModel = v.getMakeModel();
             if (currentMakeModel.equals(searchMakeModel)) {
-                x.display();
+                v.display();
             }
         }
     }
