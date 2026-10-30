@@ -1,7 +1,6 @@
 package com.pluralsight;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -11,36 +10,37 @@ public class VehicleInventoryApp {
         Scanner myScanner = new Scanner(System.in);
 
         // Create an empty array list of Vehicle objects (not null, just empty - size 0)
-        ArrayList<Vehicle> vehicles;
-        vehicles = new ArrayList<Vehicle>();
+        ArrayList<Vehicle> vehicles = loadVehicles();
 
-        HashMap<String, Vehicle> vehicleHashMap = new HashMap<String, Vehicle>();
+        mainMenu(myScanner, vehicles);
+
+        System.out.println("Thanks for using the Vehicle Inventory App!");
+    }
+
+    public static ArrayList<Vehicle> loadVehicles() {
+
+//        FileReader fileReader = new FileReader("file.txt");
+
+        ArrayList<Vehicle> vehicles = new ArrayList<Vehicle>();
 
         // Create a vehicle object, chuck in variable named car
         Vehicle car = new Vehicle(101121, "Ford Explorer", "Red", 45000, 13500);
-        // add that object to my (previously empty) array list
         vehicles.add(car);
-        String makeModel = car.getMakeModel();
-        vehicleHashMap.put(makeModel, car);
 
-        // Add another one, same deal
         Vehicle yourCar = new Vehicle(101122, "Toyota Camry", "Blue", 60000, 11000);
         vehicles.add(yourCar);
-        vehicleHashMap.put(yourCar.getMakeModel(), yourCar);
 
-
-        mainMenu(myScanner, vehicles);
+        // close file reader
+        return vehicles;
     }
 
     private static void mainMenu(Scanner myScanner, ArrayList<Vehicle> vehicles) {
         String menuPrompt = """
-                What do you want to do?
-                1 - List all vehicles
-                2 - Search by make/model
-                3 - Search by price range
-                4 - Search by color
-                5 - Add a vehicle
-                6 - Quit
+                Main Menu
+                1. List all vehicles
+                2. Reports submenu
+                3. Add a vehicle
+                4. Quit
                 Enter your command:""";
 
         boolean done = false;
@@ -49,30 +49,39 @@ public class VehicleInventoryApp {
             String userInput = myScanner.nextLine();
 
             switch (userInput) {
-                case "1" -> {
-                    listAllVehicles(vehicles);
-                }
-                case "2" -> {
-                    searchForMakeModel(vehicles, myScanner);
-                }
-                case "3" -> {
-                    searchByPrice(vehicles, myScanner);
-                }
-                case "4" -> {
-                    searchForColor(vehicles, myScanner);
-                }
-                case "5" -> {
-                    addVehicle(vehicles, myScanner);
-                }
-                case "6" -> {
-                    System.out.println("Bye!");
-                    done = true;
-                }
-                default -> {
-                    System.out.println("That ain't an option, dummy.");
-                }
+                case "1" -> listAllVehicles(vehicles);
+                case "2" -> reportsMenu(myScanner, vehicles);
+                case "3" -> addVehicle(vehicles, myScanner);
+                case "4" -> done = true;
+                default -> System.out.println("That ain't an option, dummy.");
             }
         } while (!done);
+    }
+
+    private static void reportsMenu(Scanner myScanner, ArrayList<Vehicle> vehicles) {
+        System.out.println("This is the reports menu.  I hope you liked it");
+        String menuPrompt = """
+                Reports Menu
+                1. Search by make/model
+                2. Search by price range
+                3. Search by color
+                4. Quit
+                Enter your command:""";
+
+        boolean done = false;
+        do {
+            System.out.println(menuPrompt);
+            String userInput = myScanner.nextLine();
+
+            switch (userInput) {
+                case "1" -> searchForMakeModel(vehicles, myScanner);
+                case "2" -> searchByPrice(vehicles, myScanner);
+                case "3" -> searchForColor(vehicles, myScanner);
+                case "4" -> done = true;
+                default -> System.out.println("That ain't an option, dummy.");
+            }
+        }
+        while (!done);
     }
 
     /**
