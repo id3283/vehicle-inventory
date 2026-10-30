@@ -161,13 +161,13 @@ public class VehicleInventoryApp {
         }
     }
 
-    public static void searchForMakeModel(HashMap<String, Vehicle> vehicleMap, Scanner scanner) {
-        System.out.println("Enter make/model to search for: ");
-        String searchMakeModel = scanner.nextLine();
-
-        Vehicle v = vehicleMap.get(searchMakeModel);
-        v.display();
-    }
+//    public static void searchForMakeModel(HashMap<String, Vehicle> vehicleMap, Scanner scanner) {
+//        System.out.println("Enter make/model to search for: ");
+//        String searchMakeModel = scanner.nextLine();
+//
+//        Vehicle v = vehicleMap.get(searchMakeModel);
+//        v.display();
+//    }
 
     public static void searchForMakeModel(ArrayList<Vehicle> vehicles, Scanner scanner) {
         System.out.println("Enter make/model to search for: ");
